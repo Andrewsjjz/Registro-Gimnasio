@@ -1,32 +1,23 @@
-import dotenv from "dotenv";
 import express from "express";
-import cors from 'cors'
-import clienteRoutes from "./routes/clienteRoutes.js";
+import dotenv from "dotenv";
+import cors from "cors";
+import morgan from 'morgan';
+import clientesRoutes from './routes/clientesRoutes.js'
 
 
 const app = express()
-app.use(express.json());
-
-dotenv.config();
 app.use(cors())
-app.use(clienteRoutes)
-app.use(express.json())
+app.use(express.json());
+app.use(morgan('dev'))
+dotenv.config();
+
+//Routing 
+app.use(clientesRoutes)
 
 const whitelist = [process.env.FRONTEND_URL];
-
-const corsOptions = {
-  origin: function (origin, callback) {
-    if (whitelist.includes(origin)) {
-      // Puede consultar la API
-      callback(null, true);
-    } else {
-      // No esta permitido
-      callback(new Error("Error de Cors"));
-    }
-  },
-};
-
-app.use(cors(corsOptions));
+app.use(cors({
+    origin: whitelist
+  }))
 
 
 const PORT = process.env.PORT || 4000

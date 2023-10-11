@@ -7,19 +7,20 @@ const agregarCliente = async (req, res) => {
 
     try {
         const result = await pool.query
-        ("INSERT INTO clientes (nombre, telefono, dni, precio, fechainicio, fechafinal) VALUES ($1, $2, $3, $4, $5, $6) RETURNING *", [
+        ("INSERT INTO clientes (nombre, telefono, dni, precio, fechainicio, fechafinal, cuotas) VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING *", [
             nombre, 
             telefono, 
             dni, 
             precio, 
             fechainicio, 
-            fechafinal, 
+            fechafinal,
+            cuotas 
         ])
         res.json(result.rows[0])
 
     } catch (error) {
         res.json({message: "Documento de identidad ya se encuentra registrado"})
-        
+        console.log(error)
     }
 
 }
@@ -66,12 +67,12 @@ const eliminarCliente = async (req, res) => {
 
 const actualizarCliente = async (req, res) => {
 
-    const {nombre, telefono, dni, precio, fechainicio, fechafinal} = req.body
+    const {nombre, telefono, dni, precio, fechainicio, fechafinal, cuotas} = req.body
     const {id} = req.params
     try {
         const resultado= await pool.query
-        ('UPDATE clientes SET nombre = $1, telefono = $2, dni = $3, precio=$4, fechainicio=$5, fechafinal = $6 WHERE id = $7 RETURNING *', 
-        [nombre, telefono, dni, precio, fechainicio, fechafinal, id])
+        ('UPDATE clientes SET nombre = $1, telefono = $2, dni = $3, precio=$4, fechainicio=$5, fechafinal = $6, cuotas= $7 WHERE id = $8 RETURNING *', 
+        [nombre, telefono, dni, precio, fechainicio, fechafinal, cuotas, id])
         
         if(resultado.rowCount === 0 ) return res.status(404).json({message: "Cliente no encontrado"})
        return res.json(resultado.rows[0])

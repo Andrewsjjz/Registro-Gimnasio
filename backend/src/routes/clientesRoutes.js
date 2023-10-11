@@ -1,5 +1,5 @@
 import express from "express"
-import pool from "../database.js"
+import { Router } from "express"
 import {
     agregarCliente,
     listarCliente,
@@ -7,6 +7,8 @@ import {
     actualizarCliente,
     mostrarCliente
 } from '../controllers/clientesControllers.js'
+
+
 
 const router = express.Router()
 
